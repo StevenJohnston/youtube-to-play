@@ -4,13 +4,18 @@
   "name": "Youtube to Play",
   "description": "Add your favorite Youtube music to Google Play",
   "version": "1.0",
-
+  "background": {
+  },
   "browser_action": {
+    "default_title" : "Youtube to Play",
     "default_icon": "icon.png",
     "default_popup": "popup.html"
   },
   "permissions": [
     "activeTab",
+    "tabs",
+    "downloads",
+    "http://*.youtubeinmp3.com/",
     "https://ajax.googleapis.com/"
   ]
 }
