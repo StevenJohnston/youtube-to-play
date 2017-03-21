@@ -43,18 +43,15 @@ chrome.extension.onMessage.addListener(
       case "setupPlay":
         console.log("yuess");
         var newURL = "https://play.google.com/music/listen";
-        var id = chrome.tabs.create({ url: newURL, active: false }, (tab) => {
-          console.log("new tab id");
-          console.log(tab.id);
+        var id = chrome.tabs.create({ url: newURL, active: true }, (tab) => {
+          chrome.tabs.executeScript(tab.id, {file:"content.js"}, function() {
+
+            console.log("new tab id");
+            console.log(tab.id);
+            chrome.tabs.sendMessage(tab.id, {action: "onLoad", "firstRun": firstRun});
+          });
         });
 
-        break;
-      case "getFirstRun":
-        console.log("from content");
-        chrome.extension.sendMessage({
-          action: "firstRunCallback",
-          'firstRun' : firstRun
-        });
         break;
       default:
     }
