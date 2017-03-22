@@ -27,5 +27,9 @@
     "https://play.google.com/",
     "http://*.youtubeinmp3.com/",
     "https://ajax.googleapis.com/"
+  ],
+  "web_accessible_resources" :[
+    "images/down.svg",
+    "images/playmusictut.png"
   ]
 }
