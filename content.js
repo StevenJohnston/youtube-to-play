@@ -20,10 +20,14 @@ chrome.extension.onMessage.addListener(
               {
                 uploadLoaded = true;
                 let downImageUrl = chrome.extension.getURL("images/down.svg");
-                uploadDialogContent.innerHTML +=
-                  "<div style='position:fixed; left:30px; bottom: -70px;'>" +
-                  '<div style="font-size: 70px;display: block;text-align: center;position:fixed;left:0px;bottom: 0px;color: #ff5722;">Drag it!' +
-                  "<img style='height:300px; transform: rotate(245deg) scaleX(-1); display: block;' src='" + downImageUrl + "'></div></div>";
+                var newElement = document.createElement("div");
+                newElement.style.cssText = "position:fixed; left:30px; bottom: -70px; z-index:1200";
+                newElement.innerHTML = '<div style="font-size: 70px;display: block;text-align: center;position:fixed;left:0px;bottom: 0px;color: #ff5722;">Drag it!' +
+                "<img style='height:300px; transform: rotate(245deg) scaleX(-1); display: block;' src='" + downImageUrl + "'></div>";
+
+                //newElement.appendChild(newElementInner);
+
+                document.body.appendChild(newElement);
                 observer.disconnect();
               }
             });
@@ -55,4 +59,5 @@ chrome.runtime.onMessage.addListener(
       default:
 
     }
-  });
+  }
+);
