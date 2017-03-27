@@ -2,20 +2,57 @@
 <html>
   <head>
     <title>Youtube to Play</title>
-
-    <!--
-      - JavaScript and HTML must be in separate files: see our Content Security
-      - Policy documentation[1] for details and explanation.
-      -
-      - [1]: https://developer.chrome.com/extensions/contentSecurityPolicy
-     -->
     <script src="popup.js"></script>
-
-    </script>
+    <style>
+      .download {
+        color: #fff;
+        background-color: #f0ad4e;
+        border-color: #eea236;
+        padding: 6px 12px;
+        line-height: 1.42857143;
+        cursor: pointer;
+        border: 1px solid transparent;
+        border-radius: 4px;
+      }
+      .download:hover {
+        background-color: #ec971f;
+        border-color: #d58512;
+      }
+    </style>
   </head>
-  <body style="width:700px; height:550px">
-    Wait about 1 minute before letting this popup lose focus
-    <button type="button" name="button" id="add-song"> Download </button>
-    <button type="button" name="button" id="setup-play"> Setup Play  </button>
+  <body>
+    <table>
+      <tr>
+        <td>Title</td>
+      </tr>
+      <tr>
+        <td ><input style="width:100%; font-size:14px" type="text" id="title"></td>
+      </tr>
+    </table>
+    <table style="margin: 0 auto">
+
+      <tr>
+        <td>Start</td>
+      </tr>
+      <tr>
+        <td><input style="width:75px; font-size:20px" type="number" value="0" id="startMinute"></td>
+        <td><input style="width:75px; font-size:20px" type="number" value="00" id="startSecond"></td>
+      </tr>
+
+      <tr>
+        <td>To</td>
+      </tr>
+      <tr>
+        <td><input style="width:75px; font-size:20px" type="number" value="Loading" id="endMinute"></td>
+        <td><input style="width:75px; font-size:20px" type="number" value="Loading" id="endSecond"></td>
+      </tr>
+      <tr>
+        <td colspan="2" id="download">
+          <button class="download" style="width:100%; font-size:20px" type="button" name="button" id="add-song"> Download </button>
+        </td>
+      </tr>
+    </table>
+
+
   </body>
 </html>

@@ -1,71 +1,58 @@
-var a = 0;
+var singleAction = 0;
+var pageLoaded = false;
+var uploadLoaded = false;
 chrome.extension.onMessage.addListener(
   function(request, sender, sendResponse){
-    if(a++ != 0) return;
+    if(singleAction++ != 0) return;
     switch (request.action) {
-      case "setup":
-      var pageLoaded = false;
-      var clickAddAFolder = false;
-
-      var observer = new MutationObserver(function(mutations) {
-
-        mutations.forEach(function(mutation) {
-          mutation.addedNodes.forEach(function(node){
-            var radio = document.querySelector('#select-add-music-specific-folders');
-            var addAFolder = document.querySelector("#music-content > div.g-content.view-transition > div > div.content-wrapper > div.add-music-content > div.music-sources > div > div.music-source-list-container > div.music-source-actions-wrapper > div > paper-button.music-source-change-locations-button.material-primary.x-scope.paper-button-1");
-            if(pageLoaded == false && radio != null){
-              pageLoaded = true;
-              radio.click();
-              setTimeout(function(){
-                document.querySelector('#music-content > div.g-content.view-transition > div > div.content-wrapper > div.buttons > paper-button.material-primary.add-music-folders.x-scope.paper-button-1').click();
-              });
-            }else if (pageLoaded == false && document.querySelector("#music-content > div.g-content.view-transition > div > div.content-wrapper > div.add-music-content > div.music-sources > div > div.music-source-list-container > div.music-source-actions-wrapper > div > paper-button.music-source-change-locations-button.material-primary.x-scope.paper-button-1") != null) {
-              document.querySelector("#music-content > div.g-content.view-transition > div > div.content-wrapper > div.add-music-content > div.music-sources > div > div.music-source-list-container > div.music-source-actions-wrapper > div > paper-button.music-source-change-locations-button.material-primary.x-scope.paper-button-1").click();
-              pageLoaded = true;
-            }
-            else if (clickAddAFolder == false && addAFolder != null) {
-              var existingFolders = document.querySelectorAll('.music-source-list-item-name');
-              existingFolders.forEach(function(folder){
-                if(folder.innerHTML == "playmusic"){
-                  chrome.storage.sync.set({'setup': true},function(){
-                    console.log("updated storage");
-                  });
-                  clickAddAFolder = true;
-                }
-              });
-              if(clickAddAFolder == false)
-              {
-                var main = document.querySelector('#mainPanel');
-                main.innerHTML = "";
-                main.appendChild(addAFolder);
-
-                addAFolder.style.width="50%";
-                addAFolder.style.height="100px";
-                addAFolder.style.margin = "0 auto";
-                var span = document.createElement('span');
-                var downImageUrl = chrome.extension.getURL("images/down.svg");
-                var tutImage = chrome.extension.getURL("images/playmusictut.png");
-                span.innerHTML = "<div style='width:100%; text-align:center; font-size:40px'>Click ADD A FOLDER below and select /downloads/playmusic</div><div style='width:100%;  text-align:center'><img style='height:300px' src='" + downImageUrl + "'><img  src='" + tutImage + "'></div></div>";
-                addAFolder.parentNode.insertBefore(span,addAFolder);
-
-                clickAddAFolder = true;
+      case "upload":
+        var observer = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            mutation.addedNodes.forEach(function(node){
+              var upload = document.querySelector('#nav > div.nav-section.material > a:nth-child(2)');
+              if(pageLoaded == false && upload != null){
+                pageLoaded = true;
+                upload.click();
+                //observer.disconnect();
               }
-            }
-          });
-        })
-      });
-      observer.observe(document.querySelector("body"), {
-        childList: true
-        , subtree: true
-        , attributes: true
-        , characterData: false
-      });
-
-      break;
-      case "onLoad":
-        console.log("onLoad ");
-      break;
+              var uploadDialogContent = document.querySelector('.upload-dialog');
+              if(uploadLoaded == false && uploadDialogContent != null)
+              {
+                uploadLoaded = true;
+                let downImageUrl = chrome.extension.getURL("images/down.svg");
+                uploadDialogContent.innerHTML +=
+                  "<div style='position:fixed; left:30px; bottom: -70px;'>" +
+                  '<div style="font-size: 70px;display: block;text-align: center;position:fixed;left:0px;bottom: 0px;color: #ff5722;">Drag it!' +
+                  "<img style='height:300px; transform: rotate(245deg) scaleX(-1); display: block;' src='" + downImageUrl + "'></div></div>";
+                observer.disconnect();
+              }
+            });
+          })
+        });
+        observer.observe(document.querySelector("body"), {
+          childList: true
+          , subtree: true
+          , attributes: true
+          , characterData: false
+        });
+        break;
 
     }
   }
 );
+chrome.runtime.onMessage.addListener(
+  function(request, sender, sendResponse) {
+    switch (request.action) {
+      case "GET_SONG_INFO":
+        var endTime = document.querySelector('.ytp-bound-time-right').innerHTML.split(':');
+        var title = document.querySelector('title').textContent.replace(' - YouTube','');
+        sendResponse({
+          'endMinute': endTime[0],
+          'endSecond': endTime[1],
+          'title': title
+        });
+        break;
+      default:
+
+    }
+  });

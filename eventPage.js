@@ -1,5 +1,16 @@
+chrome.tabs.onUpdated.addListener(updated);
+chrome.tabs.onActivated.addListener(updated);
+function updated(){
+  chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
+      if(tabs[0].url.includes("https://www.youtube.com/watch?v")){
+        chrome.browserAction.setIcon({path: 'icon.png'});
+      }else {
+        chrome.browserAction.setIcon({path: 'icon_disabled.png'});
+      }
+  });
+}
+
 chrome.storage.sync.get('setup',function(setupStorage){
-  console.log(setupStorage);
   var setup = setupStorage.setup;
   setup = !!setup;
 
@@ -7,7 +18,7 @@ chrome.storage.sync.get('setup',function(setupStorage){
     function(request, sender, sendResponse)
     {
       switch (request.action) {
-        case "downloadFile":
+        case "DOWNLOAD_FILE":
           var xhr = new XMLHttpRequest();
           var post = "video="+request.url;
           xhr.onreadystatechange = function() {
@@ -22,37 +33,36 @@ chrome.storage.sync.get('setup',function(setupStorage){
                 if (xhr2.readyState == 4) {
                   chrome.downloads.download({
                     url: xhr2.responseURL,
-                    filename: "playmusic/"+name+".mp3" // Optional
-                  },function(){console.log("Downlaoded");});
+                    filename: "playmusic/"+title+".mp3" // Optional
+                  },function(){
+                    var newURL = "https://play.google.com/music/listen";
+                    var id = chrome.tabs.create({ url: newURL, active: true }, (tab) => {
+                      chrome.tabs.executeScript(tab.id, {file:"content.js"}, function() {
+                        chrome.tabs.sendMessage(tab.id, {action: "upload"});
+                      });
+                    });
+                  });
                 }
               }
               xhr2.open("get", "http://www.youtubeinmp3.com" + href, true);
               xhr2.send();
             }
           }
-          xhr.open("POST", "http://www.youtubeinmp3.com/widget/button/?video=" + request.url, true);
-          xhr.send(post);
-          break;
-        case "setupPlay":
-          if(!setup){
-            var newURL = "https://play.google.com/music/listen?u=0#/msp";
-            var id = chrome.tabs.create({ url: newURL, active: true }, (tab) => {
-              chrome.tabs.executeScript(tab.id, {file:"content.js"}, function() {
-                console.log("new tab id");
-                console.log(tab.id);
-                chrome.tabs.sendMessage(tab.id, {action: "setup", "setup": setup});
-              });
-            });
-          }else{
-            var newURL = "https://play.google.com/music/listen";
-            var id = chrome.tabs.create({ url: newURL, active: true }, (tab) => {
-              chrome.tabs.executeScript(tab.id, {file:"content.js"}, function() {
-                console.log("new tab id");
-                console.log(tab.id);
-                chrome.tabs.sendMessage(tab.id, {action: "onLoad", "setup": setup});
-              });
-            });
+          var start = request.startTime;
+          var end = request.endTime;
+          var title = request.title;
+          var getButton = "http://www.youtubeinmp3.com/en/widget/button/?video=" + request.url;
+          if(end)
+          {
+            getButton += '&start=' + start;
+            getButton += '&end=' + end;
           }
+          if(title)
+          {
+            getButton += '&title=' + title;
+          }
+          xhr.open("GET", getButton, true);
+          xhr.send();
           break;
         default:
       }

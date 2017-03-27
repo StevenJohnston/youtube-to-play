@@ -2,7 +2,7 @@
   "manifest_version": 2,
 
   "name": "Youtube to Play",
-  "description": "Add your favorite Youtube music to Google Play",
+  "description": "Upload your favorite Youtube videos to Google Play Music in fewer steps",
   "version": "1.0",
   "background": {
     "scripts": ["eventPage.js"],
@@ -15,7 +15,7 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://play.google.com/music/*"],
+      "matches": ["https://play.google.com/music/*","https://www.youtube.com/watch*"],
       "js": ["content.js"]
     }
   ],
@@ -29,7 +29,6 @@
     "https://ajax.googleapis.com/"
   ],
   "web_accessible_resources" :[
-    "images/down.svg",
-    "images/playmusictut.png"
+    "images/down.svg"
   ]
 }
