@@ -33,7 +33,7 @@ chrome.storage.sync.get('setup',function(setupStorage){
                 if (xhr2.readyState == 4) {
                   chrome.downloads.download({
                     url: xhr2.responseURL,
-                    filename: "playmusic/"+title+".mp3" // Optional
+                    filename: ("playmusic/"+title).replace(/[^a-z0-9]/gi, '_')+".mp3"
                   },function(){
                     var newURL = "https://play.google.com/music/listen";
                     var id = chrome.tabs.create({ url: newURL, active: true }, (tab) => {

@@ -1,9 +1,7 @@
-var singleAction = 0;
 var pageLoaded = false;
 var uploadLoaded = false;
 chrome.extension.onMessage.addListener(
   function(request, sender, sendResponse){
-    if(singleAction++ != 0) return;
     switch (request.action) {
       case "upload":
         var observer = new MutationObserver(function(mutations) {
