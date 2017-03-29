@@ -3,7 +3,7 @@
 
   "name": "Youtube to Play",
   "description": "Upload your favorite Youtube videos to Google Play Music in fewer steps",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "background": {
     "scripts": ["eventPage.js"],
     "persistent": false

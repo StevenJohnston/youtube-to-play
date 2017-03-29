@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded',function(){
     let startTime = parseInt(startMinute) * 60 + parseInt(startSecond);
     let endTime = parseInt(endMinute) * 60 + parseInt(endSecond);
 
+    document.querySelector("#spinner").style.display = "flex";
     chrome.extension.sendMessage({
       action: "DOWNLOAD_FILE",
       url: url,

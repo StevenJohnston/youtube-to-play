@@ -18,6 +18,102 @@
         background-color: #ec971f;
         border-color: #d58512;
       }
+      .loading-spinner-area,
+      .loading-spinner-area div
+      {
+      	height:150px;
+      	width:150px;
+      }
+
+      .loading-spinner-container
+      {
+      	position: absolute;
+      	border-radius: 50%;
+      	animation: hide-loading-spinner 5s linear infinite;
+      	text-align: center;
+      	display: flex;
+      }
+      .loading-spinner-circle
+      {
+      	box-sizing: border-box;
+      	border-radius: 50%;
+      	position: absolute;
+      	border: 10px solid #337ab7;
+      	clip: rect(0px, 75px, 150px, 0px);
+      }
+      .loading-spinner-circle[data-anim~=loading-spinner-left] {
+      	animation: loading-spinner-left 5s linear infinite;
+      }
+
+      .loading-spinner-circle[data-anim~=loading-spinner-right] {
+      	animation: loading-spinner-right 5s linear infinite;
+      }
+      @-webkit-keyframes loading-spinner-right {
+      	0% { transform: rotate(0deg); }
+      	25% { transform: rotate(180deg); }
+      	50% { transform: rotate(180deg); }
+      	75% { transform: rotate(360deg); }
+      	100% { transform: rotate(540deg); }
+      }
+      @-webkit-keyframes loading-spinner-left {
+      	0% { transform: rotate(0deg); }
+      	25% { transform: rotate(180deg); }
+      	50% { transform: rotate(360deg); }
+      	75% { transform: rotate(360deg); }
+      	100% { transform: rotate(540deg); }
+      }
+      @-webkit-keyframes hide-loading-spinner {
+      	0% { clip: rect(0px, 0px, 0px, 0px); }
+      	1% { clip: rect(0px, 0px, 0px, 0px); }
+      	1.001% { clip: rect(0px, 150px, 150px, 75px); }
+      	24.9999%{clip: rect(0px, 150px, 150px, 75px);}
+      	25% { clip: rect(auto, auto, auto, auto); }
+      	74.9999% { clip: rect(auto, auto, auto, auto); }
+      	75% { clip: rect(0px, 75px, 150px, 0px); }
+      	99% { clip: rect(0px, 75px, 150px, 0px); }
+      	99.001% { clip: rect(0px, 0px, 0px, 0px); }
+      	100% { clip: rect(0px, 0px, 0px, 0px);  }
+      }
+      .loading-spinner-explain > div
+      {
+      	background-color: rgba(51, 122, 183, 0.44);
+           	border-radius: 50%;
+      }
+
+      .loading-spinner-explain div[data-anim~=loading-spinner-left]
+      {
+      	border: 10px dashed #334fb7;
+      }
+      .loading-spinner-circle[data-anim~=loading-spinner-left] > div{
+      	animation: loading-spinner-left-text 5s linear infinite;
+      }
+      .loading-spinner-explain div[data-anim~=loading-spinner-right]
+      {
+      	border: 10px dotted #337ab7;
+      }
+      .loading-spinner-circle[data-anim~=loading-spinner-right] > div{
+      	animation: loading-spinner-right-text 5s linear infinite;
+      }
+      .loading-spinner-circle > div
+      {
+      	display:flex;
+      	align-items: center;
+      	width:80px;
+      }
+      .overall{
+        background: white;
+        opacity: 0.5;
+        position: absolute;
+        top:0;
+        bottom:0;
+        left:0;
+        right:0;
+        display: flex;
+      }
+      .overall > *{
+        align-self: center;
+        margin: 0 auto;
+      }
     </style>
   </head>
   <body>
@@ -52,7 +148,13 @@
         </td>
       </tr>
     </table>
-
-
+    <div class="overall" style="display:none" id="spinner">
+      <div class="loading-spinner-area">
+        <div class="loading-spinner-container">
+          <div class="loading-spinner-circle" data-anim="loading-spinner-left"></div>
+          <div class="loading-spinner-circle" data-anim="loading-spinner-right"></div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
